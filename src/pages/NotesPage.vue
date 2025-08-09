@@ -1,7 +1,4 @@
 <script setup lang="ts"></script>
-
 <template>
-  <RouterView></RouterView>
+  <div><p>notes</p></div>
 </template>
-
-<style scoped></style>
