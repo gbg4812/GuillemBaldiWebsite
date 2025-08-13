@@ -5,7 +5,6 @@ import { viteBundler } from '@vuepress/bundler-vite'
 
 export default defineUserConfig({
   lang: 'en-US',
-  base: '/GuillemBaldiWebsite/',
 
   title: 'Guillem Baldi Notes',
   description: 'My personal notes about cs and graphics.',
