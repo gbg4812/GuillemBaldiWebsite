@@ -3,7 +3,7 @@ home: true
 title: Home
 heroImage: /teapot.png
 actions:
-  - text: Notes
+  - text: Read Notes
     link: /notes/
     type: primary
 
@@ -25,3 +25,5 @@ features:
 
 footer: MIT Licensed | Copyright © 2018-present VuePress Community
 ---
+
+## Where to find me

@@ -1,11 +1,10 @@
 ---
-date: 2025-8-13
+date: '2025-08-13'
 category:
   - Personal
 tag:
   - Personal
 sidebar: 'heading'
-sticky: true
 ---
 
 # The purpose of this website
