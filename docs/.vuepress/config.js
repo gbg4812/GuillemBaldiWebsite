@@ -10,7 +10,7 @@ export default defineUserConfig({
   description: 'My personal notes about cs and graphics.',
 
   theme: defaultTheme({
-    logo: '../teapot.png',
+    logo: '/teapot.png',
 
     navbar: [
       '/',

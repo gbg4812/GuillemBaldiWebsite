@@ -1,7 +1,7 @@
 ---
 home: true
 title: Home
-heroImage: ./teapot.png
+heroImage: /teapot.png
 actions:
   - text: Notes
     link: /notes/
