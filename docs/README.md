@@ -27,3 +27,7 @@ footer: MIT Licensed | Copyright © 2018-present VuePress Community
 ---
 
 ## Where to find me
+
+[<Icon icon="mdi:github" height="5rem" width="5rem"/>](https://github.com/gbg4812)
+[<Icon icon="mdi:linkedin" height="5rem" width="5rem"/>](https://www.linkedin.com/in/guillem-baldi-6238432a1/)
+[<Icon icon="mdi:instagram" height="5rem" width="5rem"/>](https://www.instagram.com/gbg_3d/)
