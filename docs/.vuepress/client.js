@@ -4,6 +4,7 @@ import Category from './layouts/Category.vue'
 import Tag from './layouts/Tag.vue'
 import Timeline from './layouts/Timeline.vue'
 import InstaPost from './components/InstaPost.vue'
+import { Icon } from '@iconify/vue'
 
 export default defineClientConfig({
   // we provide some blog layouts
@@ -16,5 +17,6 @@ export default defineClientConfig({
 
   enhance({ app }) {
     app.component('InstaPost', InstaPost)
+    app.component('Icon', Icon)
   },
 })
