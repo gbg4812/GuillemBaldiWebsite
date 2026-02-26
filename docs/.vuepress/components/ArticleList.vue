@@ -21,10 +21,7 @@ defineProps({
       @click="$router.push(path)"
     >
       <header class="title">
-        {{
-          (isTimeline ? `${new Date(info.date).toLocaleDateString()}: ` : '') +
-          info.title
-        }}
+        {{ (isTimeline ? `${new Date(info.date).toLocaleDateString()}: ` : '') + info.title }}
       </header>
 
       <hr />
@@ -36,9 +33,7 @@ defineProps({
           >Date: {{ new Date(info.date).toLocaleDateString() }}</span
         >
 
-        <span v-if="info.category" class="category"
-          >Category: {{ info.category.join(', ') }}</span
-        >
+        <span v-if="info.category" class="category">Category: {{ info.category.join(', ') }}</span>
 
         <span v-if="info.tag" class="tag">Tag: {{ info.tag.join(', ') }}</span>
       </div>
@@ -82,7 +77,8 @@ defineProps({
   .title {
     position: relative;
     display: inline-block;
-    font-size: 1.28rem;
+    font-size: 2rem;
+    font-weight: 800;
     line-height: 2rem;
 
     &::after {
