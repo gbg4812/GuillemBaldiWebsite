@@ -1,0 +1,1 @@
+import{_ as e,c as t,o as a}from"./app-xOkcEfNn.js";const n={};function o(c,r){return a(),t("div")}const l=e(n,[["render",o]]),i=JSON.parse('{"path":"/notes/","title":"","lang":"en-US","frontmatter":{"sidebar":false,"blog":{"type":"type","key":"notes"},"layout":"Article"},"git":{},"filePathRelative":null,"excerpt":""}');export{l as comp,i as data};
