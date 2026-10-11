@@ -12,6 +12,8 @@ sidebar: 'heading'
 
 # Resources and Resource Management in My Scene Representation Library
 
+[GitHub](https://github.com/gbg4812/SceneEquipament.git)
+
 ## Introduction
 
 While I was learning how to build a GPU renderer, I realized the need for data structures to
