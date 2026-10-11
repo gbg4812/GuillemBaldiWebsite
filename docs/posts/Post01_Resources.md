@@ -1,6 +1,6 @@
 ---
 date: '2025-08-13'
-upadate: '2026-09-15'
+update: '2026-09-15'
 category:
   - Programming
 tag:
@@ -10,45 +10,44 @@ tag:
 sidebar: 'heading'
 ---
 
-# Resources and Resource Management in my Scene Representation Library
+# Resources and Resource Management in My Scene Representation Library
 
 ## Introduction
 
-While I was learning how to do a GPU renderer, I realized the need for data structures to represent
-the scene to render. The following are some requirements of the representation system:
+While I was learning how to build a GPU renderer, I realized the need for data structures to
+represent the scene to render. The following are some requirements of the representation system:
 
 - Represent polygonal meshes with an arbitrary number of attributes of a set of types (in the
   vertices for now).
-- Represent Shaders that use the attributes (vertices) and parameters (uniforms) as inputs.
-- Represent Materials as a concrete assignment of values to the parameters of the shader.
+- Represent shaders that use the attributes (vertices) and parameters (uniforms) as inputs.
+- Represent materials as a concrete assignment of values to the parameters of the shader.
 
 > [NOTE]: Parameters can be assigned values or handles, as there are parameter types like textures,
 > which should be shared between materials.
 
-- Represents other resources like:
+- Represent other resources like:
   - Models (mesh + material)
   - Lights
   - Cameras
   - Textures
-
 - A way to represent a scene tree with a transform hierarchy.
-- A way to flag and queue the resources for update
+- A way to flag and queue the resources for update.
 
-At the time of designing, I read **Handles are better pointers** post and became quite convinced, so
-I built a resource system with managers (dense array pools) and handles. In this post, I want to
-describe this Resource system which I have ended up using to store all the resources.
+At the time of designing, I read the **Handles are better pointers** post and became quite
+convinced, so I built a resource system with managers (dense array pools) and handles. In this post,
+I want to describe this resource system, which I ended up using to store all the resources.
 
 ## The Resource
 
 ### IDs
 
-The resources stored in the managers are uniquely identified by a `uint32` id. The id is composed of
+The resources stored in the managers are uniquely identified by a `uint32` ID. The ID is composed of
 the index in the array where the resource is stored plus a generation counter. More precisely, the
-index takes the 20 lest significant bits and the generation takes the upper 12 bits. This means that
-managers can hold up to 1 million instances and there are 4 thousand generations so it is pretty
-difficult for the generation counter to wrap around and miss verify an old id.
+index takes the 20 least significant bits and the generation takes the upper 12 bits. This means
+that managers can hold up to 1 million instances and there are 4,000 generations, so it is pretty
+difficult for the generation counter to wrap around and misverify an old ID.
 
-Here some utility macros to build and unpack ids:
+Here are some utility macros to build and unpack IDs:
 
 ```cpp
 #define BUILD_ID(gen, idx) (gen << 20) | (idx & 0x000FFFFF)
@@ -56,14 +55,17 @@ Here some utility macros to build and unpack ids:
 #define INDEX(rid) (rid & 0x000FFFFF)
 ```
 
-### The resource base type
+````
 
-The Resource class is intended to be inherited from the concrete resource types like (materials,
-textures, meshes...). It exposes an interface to access the raw id or the typed id (the handle) and
-a `name` attribute which is just useful if the resource has to be displayed in a UI or for debugging
-purposes.
+### The Resource Base Type
 
-To avoid the error of copying a whole resource the copy and copy assign constructors are deleted.
+The `Resource` class is intended to be inherited by concrete resource types like materials,
+textures, meshes, etc. It exposes an interface to access the raw ID or the typed ID (the handle) and
+a `name` attribute, which is useful if the resource needs to be displayed in a UI or used for
+debugging purposes.
+
+To avoid accidentally copying a whole resource, the copy constructor and copy assignment operator
+are deleted.
 
 ```cpp
 template <typename TH>
@@ -93,16 +95,16 @@ class Resource {
     std::string _name;
     uint32_t _rid = 0;
 };
+
 ```
 
-The code below is the handle type which simply wraps the `uint32` id with some utility methods and a
-type. One useful method is the `bool` operator which allows for syntax like `if(handle)` to check if
-a handle is null (the resource id 0 is considered null). Like the Resource class, the
+The code below shows the handle type, which simply wraps the `uint32` ID with some utility methods
+and a type. One useful method is the `bool` operator, which allows for syntax like `if(handle)` to
+check if a handle is null (resource ID 0 is considered null). Like the `Resource` class, the
 `ResourceHandle` class is also intended to be inherited by classes like `MeshHandle` or
-`MaterialHandle` just to add type safety to de handles of different resources.
+`MaterialHandle` to add type safety to the handles of different resources.
 
 ```cpp
-
 class ResourceHandle {
     uint32_t _rid = 0;
 
@@ -120,12 +122,13 @@ class ResourceHandle {
 
     explicit operator bool() const { return INDEX(_rid); }
 };
+
 ```
 
 The creation of resources needs to be controlled, as the `rid` must be assigned properly. Also, I
-didn't want for every resource to live in a random place in memory, and I wanted to work with
-handles. To comply with all my requirements, it was clear I needed to implement a dense array of
-resources, which I called `ResourceManager`.
+didn't want every resource to live in a random place in memory, and I wanted to work with handles.
+To comply with all my requirements, it was clear I needed to implement a dense array of resources,
+which I called `ResourceManager`.
 
 ```cpp
 // Manager class to allocate and get instances of a type of resource
@@ -140,11 +143,12 @@ class ResourceManager {
     static_assert(
         std::is_default_constructible_v<T>,
         "The T type must be default constructible with a call to Resource()");
+
 ```
 
 These first lines of code define the class with two template parameters: `T` for the type to be
 stored and `TH` for the handle type. Following the class declaration, you can see four static
-asserts which ensure the types of the handle and the resource are derived respectively from
+assertions that ensure the types of the handle and the resource are derived respectively from
 `ResourceHandle` and `Resource` and that the Resource has a default constructor (needed for default
 initialization) and a constructor taking the `rid` and `name` of the resource.
 
@@ -153,20 +157,20 @@ private:
     std::Hive<T> _resources;
     std::list<size_t> _free_indexes;
 };
+
 ```
 
-You can see in the code above that the class has just two attributes: a Hive of `T` to store all the
-instances and a linked list of free indexes to track the slots which are deallocated. In the code
-below, there are all the methods which modify these attributes to provide the functionality of the
-manager.
+You can see in the code above that the class has just two attributes: a `Hive` of `T` to store all
+the instances and a linked list of free indices to track the slots that are deallocated. In the code
+below are all the methods that modify these attributes to provide the functionality of the manager.
 
-> [NOTE]: The `Hive` container allocates chunks of memory when needed so it is resizable like a
-> vector but does not move the already allocated elements. This has the advantage that the
-> references or pointers to elements of the Hive are not invalidated just by resizing the container
-> making it less error prone. It also allows the programmer to balance the cost in memory with the
-> cost in performance by adjusting the chunk size.
+> [NOTE]: The `Hive` container allocates chunks of memory when needed, so it is resizable like a
+> vector but does not move already-allocated elements. This has the advantage that references or
+> pointers to elements of the Hive are not invalidated just by resizing the container, making it
+> less error-prone. It also allows the programmer to balance the cost in memory with the cost in
+> performance by adjusting the chunk size.
 
-The constructor which initializes the element 0 (null) and reserves the initial size.
+The constructor initializes element 0 (null) and reserves the initial size:
 
 ```cpp
    public:
@@ -177,8 +181,8 @@ The constructor which initializes the element 0 (null) and reserves the initial 
 
 ```
 
-The next index method returns or the first free index in the list or the next index at the end of
-the hive.
+The `nextIndex` method returns either the first free index in the list or the next index at the end
+of the hive:
 
 ```cpp
     uint32_t nextIndex() const {
@@ -188,15 +192,15 @@ the hive.
             return _resources.size();
         }
     }
+
 ```
 
-There are two creation methods, the one taking a name is intended for the creation of resources. The
-other takes just a handle and it is intended to allocate a resource which will be an extension of
-the named resource with the same handle. This pattern is similar to the entity component system
-architecture as it allows to "extend" the data related with a rid without coupling them.
+There are two creation methods: the one taking a name is intended for the creation of resources. The
+other takes just a handle and is intended to allocate a resource that will be an extension of the
+named resource with the same handle. This pattern is similar to the Entity Component System
+architecture, as it allows extending the data related to an RID without coupling them.
 
 ```cpp
-
     TH create(const std::string& name) {
         size_t index = _resources.size();
         if (not _free_indexes.empty()) {
@@ -215,14 +219,15 @@ architecture as it allows to "extend" the data related with a rid without coupli
             _resources.resize(handle.getIndex() + 1);
         else
             assert(not INDEX(_resources[handle.getIndex()]
-                                 .getRID()));  // enshure we are creating on an
+                                 .getRID()));  // ensure we are creating on an
                                                // empty spot
         _resources[handle.getIndex()] = T(handle.getRID());
         return handle;
     }
+
 ```
 
-The get methods returns a reference to access the resource instance. It checks that the index is in
+The `get` method returns a reference to access the resource instance. It checks that the index is in
 bounds and the generation matches.
 
 ```cpp
@@ -234,8 +239,8 @@ bounds and the generation matches.
 
 ```
 
-Finally, the destroy methods adds the index of the handle to the free indexes list and increases the
-generation.
+Finally, the `destroy` method adds the index of the handle to the free indices list and increments
+the generation.
 
 ```cpp
     void destroy(TH handle) {
@@ -245,12 +250,13 @@ generation.
         _free_indexes.push_front(handle.getIndex());
     }
 };
+
 ```
 
-Aside from this basic methods I also implemented a standard iterator, which ignores the empty slots
-allowing for easy iteration of the whole container.
+Aside from these basic methods, I also implemented a standard iterator that ignores empty slots,
+allowing easy iteration over the whole container.
 
-The way I intend for the manager and resources to be used is the following:
+The way I intend for the manager and resources to be used is as follows:
 
 ```cpp
     ResourceManager<Mesh, MeshHandle> mg;
@@ -268,5 +274,6 @@ The way I intend for the manager and resources to be used is the following:
 ```
 
 Thank you for reading until the end. If you have any questions or suggestions for improvement, you
-can write me through [LinkedIn](https://www.linkedin.com/in/guillem-baldi-6238432a1/) or open an
-issue in [GitHub](https://github.com/gbg4812/SceneEquipament.git).
+can reach out to me via [LinkedIn](https://www.linkedin.com/in/guillem-baldi-6238432a1/) or open an
+issue on [GitHub](https://github.com/gbg4812/SceneEquipament.git).
+````
