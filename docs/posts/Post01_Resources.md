@@ -278,7 +278,3 @@ The way I intend for the manager and resources to be used is as follows:
 Thank you for reading until the end. If you have any questions or suggestions for improvement, you
 can reach out to me via [LinkedIn](https://www.linkedin.com/in/guillem-baldi-6238432a1/) or open an
 issue on [GitHub](https://github.com/gbg4812/SceneEquipament.git).
-
-```
-
-```
