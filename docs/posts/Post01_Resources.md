@@ -33,9 +33,11 @@ represent the scene to render. The following are some requirements of the repres
 - A way to represent a scene tree with a transform hierarchy.
 - A way to flag and queue the resources for update.
 
-At the time of designing, I read the **Handles are better pointers** post and became quite
-convinced, so I built a resource system with managers (dense array pools) and handles. In this post,
-I want to describe this resource system, which I ended up using to store all the resources.
+At the time of designing, I read the
+[Handles are better pointers](https://floooh.github.io/2018/06/17/handles-vs-pointers.html) post and
+became quite convinced, so I built a resource system with managers (dense array pools) and handles.
+In this post, I want to describe this resource system, which I ended up using to store all the
+resources.
 
 ## The Resource
 
@@ -54,8 +56,6 @@ Here are some utility macros to build and unpack IDs:
 #define GEN(rid) (rid >> 20)
 #define INDEX(rid) (rid & 0x000FFFFF)
 ```
-
-````
 
 ### The Resource Base Type
 
@@ -276,4 +276,7 @@ The way I intend for the manager and resources to be used is as follows:
 Thank you for reading until the end. If you have any questions or suggestions for improvement, you
 can reach out to me via [LinkedIn](https://www.linkedin.com/in/guillem-baldi-6238432a1/) or open an
 issue on [GitHub](https://github.com/gbg4812/SceneEquipament.git).
-````
+
+```
+
+```
