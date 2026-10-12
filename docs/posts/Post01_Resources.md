@@ -1,18 +1,17 @@
 ---
-date: '2025-08-13'
-update: '2026-09-15'
+date: '2026-09-15'
 category:
-  - Programming
+    - Programming
 tag:
-  - Programming
-  - C++
-  - SWD
+    - Programming
+    - C++
+    - SWD
 sidebar: 'heading'
 ---
 
-# Resources and Resource Management in My Scene Representation Library
+# Resource Management
 
-[GitHub](https://github.com/gbg4812/SceneEquipament.git)
+::mdi:github:: [github](https://github.com/gbg4812/SceneEquipament.git)
 
 ## Introduction
 
@@ -24,14 +23,15 @@ represent the scene to render. The following are some requirements of the repres
 - Represent shaders that use the attributes (vertices) and parameters (uniforms) as inputs.
 - Represent materials as a concrete assignment of values to the parameters of the shader.
 
-> [NOTE]: Parameters can be assigned values or handles, as there are parameter types like textures,
+> [!info]
+> Parameters can be assigned values or handles, as there are parameter types like textures,
 > which should be shared between materials.
 
 - Represent other resources like:
-  - Models (mesh + material)
-  - Lights
-  - Cameras
-  - Textures
+    - Models (mesh + material)
+    - Lights
+    - Cameras
+    - Textures
 - A way to represent a scene tree with a transform hierarchy.
 - A way to flag and queue the resources for update.
 
@@ -166,7 +166,8 @@ You can see in the code above that the class has just two attributes: a `Hive` o
 the instances and a linked list of free indices to track the slots that are deallocated. In the code
 below are all the methods that modify these attributes to provide the functionality of the manager.
 
-> [NOTE]: The `Hive` container allocates chunks of memory when needed, so it is resizable like a
+> [!info]
+> The `Hive` container allocates chunks of memory when needed, so it is resizable like a
 > vector but does not move already-allocated elements. This has the advantage that references or
 > pointers to elements of the Hive are not invalidated just by resizing the container, making it
 > less error-prone. It also allows the programmer to balance the cost in memory with the cost in

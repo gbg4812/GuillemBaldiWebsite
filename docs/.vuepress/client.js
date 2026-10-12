@@ -7,16 +7,16 @@ import InstaPost from './components/InstaPost.vue'
 import { Icon } from '@iconify/vue'
 
 export default defineClientConfig({
-  // we provide some blog layouts
-  layouts: {
-    Article,
-    Category,
-    Tag,
-    Timeline,
-  },
+    // we provide some blog layouts
+    layouts: {
+        Article,
+        Category,
+        Tag,
+        Timeline,
+    },
 
-  enhance({ app }) {
-    app.component('InstaPost', InstaPost)
-    app.component('Icon', Icon)
-  },
+    enhance({ app }) {
+        app.component('InstaPost', InstaPost)
+        app.component('Icon', Icon)
+    },
 })
